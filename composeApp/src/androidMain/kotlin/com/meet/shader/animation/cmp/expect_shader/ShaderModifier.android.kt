@@ -15,8 +15,19 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+actual fun shaderAvailable(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+
 actual fun Modifier.shader(
+    shader: String,
+    inputName: String?,
+    uniforms: ShaderProvider.() -> Unit
+): Modifier {
+    if (!shaderAvailable()) return this
+    return shaderImpl(shader, inputName, uniforms)
+}
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+private fun Modifier.shaderImpl(
     shader: String,
     inputName: String?,
     uniforms: ShaderProvider.() -> Unit
@@ -42,9 +53,6 @@ actual fun Modifier.shader(
             }
         }
     }
-}
-fun ShaderProvider.updateResolution(width: Float, height: Float) {
-    uniformFloat("resolution", width, height)
 }
 private class ShaderProviderImpl(
     private val runtimeShader: RuntimeShader,

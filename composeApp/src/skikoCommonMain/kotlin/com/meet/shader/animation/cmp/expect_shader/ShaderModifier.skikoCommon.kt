@@ -12,6 +12,8 @@ import org.jetbrains.skia.ImageFilter
 import org.jetbrains.skia.RuntimeEffect
 import org.jetbrains.skia.RuntimeShaderBuilder
 
+actual fun shaderAvailable(): Boolean = true
+
 actual fun Modifier.shader(
     shader: String,
     inputName: String?,
@@ -40,15 +42,10 @@ actual fun Modifier.shader(
         }
     }
 }
-fun ShaderProvider.updateResolution(width: Float, height: Float) {
-    uniformFloat("resolution", width, height)
-}
 
 private class ShaderProviderImpl(
     private val runtimeShaderBuilder: RuntimeShaderBuilder,
 ) : ShaderProvider {
-
-
 
     override fun uniformInt(name: String, value: Int) {
         runtimeShaderBuilder.uniform(name, value)
@@ -78,7 +75,13 @@ private class ShaderProviderImpl(
         runtimeShaderBuilder.uniform(name, value1, value2, value3)
     }
 
-    override fun uniformFloat(name: String, value1: Float, value2: Float, value3: Float, value4: Float) {
+    override fun uniformFloat(
+        name: String,
+        value1: Float,
+        value2: Float,
+        value3: Float,
+        value4: Float
+    ) {
         runtimeShaderBuilder.uniform(name, value1, value2, value3, value4)
     }
 
