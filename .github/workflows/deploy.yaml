@@ -1,9 +1,7 @@
 name: Deploy Web App
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -15,6 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: master
           fetch-depth: 0
 
       - name: Setup Java
@@ -24,8 +23,6 @@ jobs:
           java-version: '17'
 
       - uses: gradle/actions/setup-gradle@v4
-        with:
-          cache-encryption-key: ${{ secrets.GRADLE_CACHE_ENCRYPTION_KEY }}
 
       - name: Build
         run: ./gradlew :composeApp:composeCompatibilityBrowserDistribution
