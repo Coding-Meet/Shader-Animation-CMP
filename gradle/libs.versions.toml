@@ -28,6 +28,8 @@ junit = "4.13.2"
 
 # Navigation
 androidx-navigation = "2.9.2"
+androidx-nav3 = "1.0.0-alpha06"
+navigation3-browser = "0.3.1"
 
 # Material
 material3 = "1.10.0-alpha05"
@@ -98,8 +100,12 @@ compose-material3-adaptive-layout = { group = "org.jetbrains.compose.material3.a
 compose-material3-adaptive-navigation-suite = { module = "org.jetbrains.compose.material3:material3-adaptive-navigation-suite", version.ref = "material3WindowSizeClass" }
 compose-material3-adaptive-navigation = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "material3-adaptive" }
 
+compose-nav3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "androidx-nav3" }
+compose-material3-adaptive-nav3 = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation3", version.ref = "material3-adaptive" }
+
 # Navigation
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+navigation3-browser = { module = "com.github.terrakok:navigation3-browser", version.ref = "navigation3-browser" }
 
 # Koin
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
