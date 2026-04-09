@@ -17,6 +17,7 @@ kotlin {
             group("skikoCommon") {
                 withJvm()
                 withApple()
+                withJs()
                 withWasmJs()
             }
         }
