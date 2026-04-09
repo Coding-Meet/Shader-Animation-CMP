@@ -9,7 +9,7 @@ sealed interface AnimationRoute
 data object AnimationList : AnimationRoute
 
 @Serializable
-data object ShaderAnimation : AnimationRoute
+data object TouchShaderAnimation : AnimationRoute
 
 @Serializable
 data object PlasmaWaves : AnimationRoute
@@ -78,7 +78,7 @@ data object NeonOrbit : AnimationRoute
 data object PlasmaGlobe : AnimationRoute
 
 enum class AnimationEntry(val title: String, val route: AnimationRoute) {
-    SHADER_ANIMATION("Shader Animation", ShaderAnimation),
+    SHADER_ANIMATION("Touch Shader Animation", TouchShaderAnimation),
     PLASMA_WAVES("Plasma Waves", PlasmaWaves),
     STARFIELD("Starfield", Starfield),
     WATER_RIPPLES("Water Ripples", WaterRipples),

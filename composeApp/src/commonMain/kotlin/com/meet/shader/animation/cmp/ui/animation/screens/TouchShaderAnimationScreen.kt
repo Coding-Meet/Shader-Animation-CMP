@@ -1,22 +1,34 @@
-package com.meet.shader.animation.cmp
+package com.meet.shader.animation.cmp.ui.animation.screens
 
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
 import com.meet.shader.animation.cmp.expect_shader.shader
 
-const val TOUCH_SHADER = """
+private const val TOUCH_SHADER = """
     uniform float2 resolution;
     uniform float time;
     uniform float2 touch;
@@ -40,10 +52,8 @@ const val TOUCH_SHADER = """
     }
 """
 
-
-@Preview
 @Composable
-fun TouchShaderDemo() {
+fun TouchShaderAnimationScreen(onBack: () -> Unit) {
     val time by rememberShaderTime()
 
     var touch by remember { mutableStateOf(Offset.Zero) }
@@ -64,5 +74,24 @@ fun TouchShaderDemo() {
                 uniformFloat("time", time)
                 uniformFloat("touch", touch.x, touch.y)
             }
-    )
+    ) {
+        IconButton(
+            onClick = onBack,
+            modifier = Modifier.align(Alignment.TopStart).systemBarsPadding().padding(8.dp)
+        ) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+        }
+        Text(
+            text = "Touch Shader Animation",
+            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+            color = Color.White,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun TouchShaderAnimationScreenPreview(){
+    TouchShaderAnimationScreen(onBack = {})
 }
