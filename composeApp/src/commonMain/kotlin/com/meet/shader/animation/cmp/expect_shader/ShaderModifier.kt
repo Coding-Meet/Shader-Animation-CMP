@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import kotlin.time.Clock
 
 expect fun Modifier.shader(
     shader: String,
@@ -17,15 +18,18 @@ expect fun isShaderAvailable(): Boolean
 fun ShaderProvider.updateResolution(width: Float, height: Float) {
     uniformFloat("resolution", width, height)
 }
+
 fun ShaderProvider.color(name: String, color: Color) {
     uniformColor(name, color.red, color.green, color.blue, color.alpha)
 }
 
 @Composable
-fun rememberTimeMaxFPS_S() = produceState(0f) {
+fun rememberShaderTime() = produceState(0f) {
+    val start = Clock.System.now().toEpochMilliseconds()
     while (true) {
-        withInfiniteAnimationFrameMillis { frameTimeMillis ->
-            value = frameTimeMillis / 1000f
+        withInfiniteAnimationFrameMillis {
+            val now = Clock.System.now().toEpochMilliseconds()
+            value = (now - start) / 1000f
         }
     }
 }

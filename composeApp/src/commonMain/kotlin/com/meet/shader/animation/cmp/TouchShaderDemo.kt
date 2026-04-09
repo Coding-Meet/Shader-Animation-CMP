@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
-import com.meet.shader.animation.cmp.expect_shader.rememberTimeMaxFPS_S
+import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
 import com.meet.shader.animation.cmp.expect_shader.shader
 
 const val TOUCH_SHADER = """
@@ -44,7 +44,7 @@ const val TOUCH_SHADER = """
 @Preview
 @Composable
 fun TouchShaderDemo() {
-    val time by rememberTimeMaxFPS_S()
+    val time by rememberShaderTime()
 
     var touch by remember { mutableStateOf(Offset.Zero) }
 
