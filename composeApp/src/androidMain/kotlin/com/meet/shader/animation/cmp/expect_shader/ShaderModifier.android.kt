@@ -37,16 +37,16 @@ private fun Modifier.shaderImpl(
     val provider = remember(shader) { ShaderProviderImpl(runtimeShader) }
     val paint = remember(runtimeShader) { android.graphics.Paint().apply { this.shader = runtimeShader } }
 
-    SideEffect { uniforms(provider) }
-
     if (inputName != null) {
         this.graphicsLayer {
+            uniforms(provider)
             provider.updateResolution(size.width, size.height)
             renderEffect = RenderEffect.createRuntimeShaderEffect(runtimeShader, inputName)
                 .asComposeRenderEffect()
         }
     } else {
         this.drawBehind {
+            uniforms(provider)
             provider.updateResolution(size.width, size.height)
             drawIntoCanvas { canvas ->
                 canvas.nativeCanvas.drawRect(0f, 0f, size.width, size.height, paint)

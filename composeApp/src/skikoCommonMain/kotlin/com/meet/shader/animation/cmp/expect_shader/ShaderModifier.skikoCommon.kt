@@ -24,10 +24,9 @@ actual fun Modifier.shader(
     val builder = remember(shader) { RuntimeShaderBuilder(effect) }
     val provider = remember(shader) { ShaderProviderImpl(builder) }
 
-    SideEffect { uniforms(provider) }
-
     if (inputName != null) {
         this.graphicsLayer {
+            uniforms(provider)
             provider.updateResolution(size.width, size.height)
             renderEffect = ImageFilter.makeRuntimeShader(
                 runtimeShaderBuilder = builder,
@@ -37,6 +36,7 @@ actual fun Modifier.shader(
         }
     } else {
         this.drawBehind {
+            uniforms(provider)
             provider.updateResolution(size.width, size.height)
             drawRect(ShaderBrush(builder.makeShader()))
         }

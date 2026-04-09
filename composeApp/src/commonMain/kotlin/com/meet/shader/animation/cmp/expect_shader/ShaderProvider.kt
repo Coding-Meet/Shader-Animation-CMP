@@ -12,6 +12,5 @@ interface ShaderProvider {
     fun uniformFloat(name: String, value1: Float, value2: Float, value3: Float, value4: Float)
     fun uniformFloat(name: String, values: List<Float>)
 
-    // Use this for color uniforms — maps to setColorUniform on Android, float4 on Skiko/iOS
     fun uniformColor(name: String, r: Float, g: Float, b: Float, a: Float)
 }
