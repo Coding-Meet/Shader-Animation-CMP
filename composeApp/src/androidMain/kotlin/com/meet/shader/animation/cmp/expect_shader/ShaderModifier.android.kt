@@ -13,14 +13,14 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
 
-actual fun shaderAvailable(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+actual fun isShaderAvailable(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
 actual fun Modifier.shader(
     shader: String,
     inputName: String?,
     uniforms: ShaderProvider.() -> Unit
 ): Modifier {
-    if (!shaderAvailable()) return this
+    if (!isShaderAvailable()) return this
     return shaderImpl(shader, inputName, uniforms)
 }
 

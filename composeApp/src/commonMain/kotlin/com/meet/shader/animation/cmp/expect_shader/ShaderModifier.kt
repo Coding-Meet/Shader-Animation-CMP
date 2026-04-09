@@ -12,7 +12,7 @@ expect fun Modifier.shader(
     uniforms: ShaderProvider.() -> Unit = {}
 ): Modifier
 
-expect fun shaderAvailable(): Boolean
+expect fun isShaderAvailable(): Boolean
 
 fun ShaderProvider.updateResolution(width: Float, height: Float) {
     uniformFloat("resolution", width, height)

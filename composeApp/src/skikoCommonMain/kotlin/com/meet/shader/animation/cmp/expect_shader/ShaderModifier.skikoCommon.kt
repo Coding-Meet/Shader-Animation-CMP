@@ -11,7 +11,7 @@ import org.jetbrains.skia.ImageFilter
 import org.jetbrains.skia.RuntimeEffect
 import org.jetbrains.skia.RuntimeShaderBuilder
 
-actual fun shaderAvailable(): Boolean = true
+actual fun isShaderAvailable(): Boolean = true
 
 actual fun Modifier.shader(
     shader: String,
