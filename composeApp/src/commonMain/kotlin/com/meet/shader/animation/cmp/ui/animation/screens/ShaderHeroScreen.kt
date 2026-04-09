@@ -1,22 +1,45 @@
 package com.meet.shader.animation.cmp.ui.animation.screens
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
 import com.meet.shader.animation.cmp.expect_shader.shader
 
@@ -90,6 +113,21 @@ half4 main(float2 fragCoord) {
 @Composable
 fun ShaderHeroScreen(onBack: () -> Unit) {
     val time by rememberShaderTime()
+    var appeared by remember { mutableStateOf(false) }
+
+    val alpha by animateFloatAsState(
+        targetValue = if (appeared) 1f else 0f,
+        animationSpec = tween(durationMillis = 1000)
+    )
+
+    val offsetY by animateFloatAsState(
+        targetValue = if (appeared) 0f else 30f,
+        animationSpec = tween(durationMillis = 1000)
+    )
+
+    LaunchedEffect(Unit) {
+        appeared = true
+    }
 
     Box(
         modifier = Modifier
@@ -104,11 +142,140 @@ fun ShaderHeroScreen(onBack: () -> Unit) {
         ) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
         }
-        Text(
-            text = "Shader Hero",
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            color = Color.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+                .systemBarsPadding(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(60.dp))
+
+            // Trusted by capsule
+            Row(
+                modifier = Modifier
+                    .graphicsLayer {
+                        this.alpha = alpha
+                        this.translationY = -offsetY // Offset from top
+                    }
+                    .clip(CircleShape)
+                    .background(Color(0xFFFFA500).copy(alpha = 0.1f))
+                    .border(1.dp, Color(0xFFFFA500).copy(alpha = 0.3f), CircleShape)
+                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Text("✨")
+                Text(
+                    text = "Trusted by forward-thinking teams.",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color(0xFFFFA500).copy(alpha = 0.9f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Headline
+            Text(
+                text = "Launch Your Workflow Into Orbit",
+                style = MaterialTheme.typography.displaySmall.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 42.sp,
+                    lineHeight = 48.sp
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .graphicsLayer {
+                        this.alpha = alpha
+                        this.translationY = offsetY
+                    }
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                Color(0xFFFFA500),
+                                Color(0xFFFFFF00),
+                                Color(0xFFFFA500).copy(alpha = 0.8f)
+                            )
+                        )
+                    )
+                    .graphicsLayer(alpha = 0.99f)
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            // Subtitle
+            Text(
+                text = "Supercharge productivity with AI-powered automation and integrations built for the next generation of teams.",
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = FontWeight.Light,
+                    fontSize = 14.sp
+                ),
+                color = Color(0xFFFFA500).copy(alpha = 0.85f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .graphicsLayer {
+                        this.alpha = alpha
+                        this.translationY = offsetY
+                    }
+                    .padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // CTA Buttons
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        this.alpha = alpha
+                        this.translationY = offsetY
+                    },
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Button(
+                    onClick = {},
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = CircleShape,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                Brush.linearGradient(
+                                    colors = listOf(Color(0xFFFFA500), Color(0xFFFFFF00))
+                                )
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            "Get Started for Free",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = Color.Black
+                        )
+                    }
+                }
+
+                OutlinedButton(
+                    onClick = {},
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = CircleShape,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color(0xFFFFA500).copy(alpha = 0.1f),
+                        contentColor = Color(0xFFFFA500).copy(alpha = 0.9f)
+                    ),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFFA500).copy(alpha = 0.3f))
+                ) {
+                    Text(
+                        "Explore Features",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }
