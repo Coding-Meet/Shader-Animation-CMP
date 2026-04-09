@@ -5,7 +5,7 @@ kotlin = "2.3.20"
 composeMultiplatform = "1.10.3"
 
 android-compileSdk = "36"
-android-minSdk = "33" # by Android RuntimeShader required minimum
+android-minSdk = "24"
 android-targetSdk = "36"
 
 # Coroutines & Serialization & Datetime

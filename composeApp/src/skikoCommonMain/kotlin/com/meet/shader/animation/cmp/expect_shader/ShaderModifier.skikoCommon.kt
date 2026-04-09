@@ -1,6 +1,5 @@
 package com.meet.shader.animation.cmp.expect_shader
 
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed

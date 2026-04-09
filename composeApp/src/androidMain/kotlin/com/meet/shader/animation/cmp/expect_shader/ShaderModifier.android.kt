@@ -4,12 +4,10 @@ import android.graphics.RenderEffect
 import android.graphics.RuntimeShader
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.asComposeRenderEffect
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.graphicsLayer
@@ -54,6 +52,7 @@ private fun Modifier.shaderImpl(
         }
     }
 }
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 private class ShaderProviderImpl(
     private val runtimeShader: RuntimeShader,
 ) : ShaderProvider {
