@@ -21,9 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.meet.shader.animation.cmp.navigation.AnimationEntry
 import com.meet.shader.animation.cmp.navigation.AnimationRoute
+import com.meet.shader.animation.cmp.ui.theme.ShaderAnimationTheme
 
 @Composable
 fun AnimationScreen(onNavigate: (AnimationRoute) -> Unit) {
@@ -55,6 +57,14 @@ fun AnimationScreen(onNavigate: (AnimationRoute) -> Unit) {
                 )
             }
         }
+    }
+}
+
+@Composable
+@Preview
+private fun AnimationScreenPreview() {
+    ShaderAnimationTheme(true) {
+        AnimationScreen(onNavigate = {})
     }
 }
 
@@ -92,5 +102,13 @@ private fun AnimationScreenHeader(count: Int) {
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )
         }
+    }
+}
+
+@Composable
+@Preview
+private fun AnimationScreenHeaderPreview() {
+    ShaderAnimationTheme(true) {
+        AnimationScreenHeader(count = 10)
     }
 }

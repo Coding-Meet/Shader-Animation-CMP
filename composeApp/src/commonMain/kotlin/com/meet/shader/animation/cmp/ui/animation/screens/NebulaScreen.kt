@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
 import com.meet.shader.animation.cmp.expect_shader.shader
@@ -106,4 +107,10 @@ fun NebulaScreen(onBack: () -> Unit) {
             modifier = Modifier.align(Alignment.Center)
         )
     }
+}
+
+@Composable
+@Preview
+private fun NebulaScreenPreview(){
+    NebulaScreen(onBack = {})
 }

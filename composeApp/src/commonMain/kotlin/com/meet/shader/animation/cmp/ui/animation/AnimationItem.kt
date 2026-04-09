@@ -17,8 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.meet.shader.animation.cmp.ui.theme.CardGradients
+import com.meet.shader.animation.cmp.ui.theme.ShaderAnimationTheme
 
 @Composable
 fun AnimationItem(
@@ -74,5 +76,17 @@ fun AnimationItem(
                 )
             }
         }
+    }
+}
+
+@Composable
+@Preview
+private fun AnimationItemPreview() {
+    ShaderAnimationTheme {
+        AnimationItem(
+            title = "Matrix Rain",
+            index = 0,
+            onClick = {}
+        )
     }
 }
