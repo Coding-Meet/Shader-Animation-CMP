@@ -16,4 +16,8 @@ interface ShaderProvider {
 
     fun uniformColor(name: String, r: Float, g: Float, b: Float, a: Float)
     fun uniformColor(name: String,color: Color)
+
+    fun update(block: ShaderProvider.() -> Unit) {
+        this.block()
+    }
 }

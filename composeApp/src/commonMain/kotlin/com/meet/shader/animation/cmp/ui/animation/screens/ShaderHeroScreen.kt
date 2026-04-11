@@ -44,7 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.meet.shader.animation.cmp.expect_shader.createShader
-import com.meet.shader.animation.cmp.expect_shader.rememberAppRuntimeShaderOrNull
+import com.meet.shader.animation.cmp.expect_shader.rememberShaderInstanceOrNull
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
 
 private const val SHADER_HERO_SHADER = """
@@ -116,7 +116,7 @@ half4 main(float2 fragCoord) {
 
 @Composable
 fun ShaderHeroScreen(onBack: () -> Unit) {
-    val (shader, provider) = rememberAppRuntimeShaderOrNull(SHADER_HERO_SHADER)
+    val (shader, provider) = rememberShaderInstanceOrNull(SHADER_HERO_SHADER)
     val time by rememberShaderTime()
     var appeared by remember { mutableStateOf(false) }
 
@@ -139,8 +139,10 @@ fun ShaderHeroScreen(onBack: () -> Unit) {
             .fillMaxSize()
             .drawBehind {
                 if (shader != null && provider != null) {
-                    provider.uniformFloat("resolution", size.width, size.height)
-                    provider.uniformFloat("time", time)
+                    provider.update {
+                        uniformFloat("resolution", size.width, size.height)
+                        uniformFloat("time", time)
+                    }
                     drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
                 }
             }

@@ -53,7 +53,7 @@ import androidx.compose.ui.unit.sp
 import com.meet.shader.animation.cmp.expect_shader.createAppRuntimeShaderRenderEffect
 import com.meet.shader.animation.cmp.expect_shader.createShader
 import com.meet.shader.animation.cmp.expect_shader.isShaderAvailable
-import com.meet.shader.animation.cmp.expect_shader.rememberAppRuntimeShaderOrNull
+import com.meet.shader.animation.cmp.expect_shader.rememberShaderInstanceOrNull
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
 
 private const val BG_SHADER = """
@@ -263,7 +263,7 @@ fun ShaderApiShowcaseScreen(onBack: () -> Unit) {
 @Composable
 private fun Tab1Background() {
     val timeState = rememberShaderTime()
-    val (shader, provider) = rememberAppRuntimeShaderOrNull(BG_SHADER)
+    val (shader, provider) = rememberShaderInstanceOrNull(BG_SHADER)
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (isShaderAvailable() && shader != null && provider != null) {
@@ -309,10 +309,10 @@ private fun Tab1Background() {
 @Composable
 private fun Tab2InnerCard() {
     val timeState = rememberShaderTime()
-    val (fireShader, fireProvider) = rememberAppRuntimeShaderOrNull(FIRE_CARD_SHADER)
-    val (plasmaShader, plasmaProvider) = rememberAppRuntimeShaderOrNull(PLASMA_CARD_SHADER)
-    val (neonShader, neonProvider) = rememberAppRuntimeShaderOrNull(NEON_CARD_SHADER)
-    val (starShader, starProvider) = rememberAppRuntimeShaderOrNull(STARFIELD_CARD_SHADER)
+    val (fireShader, fireProvider) = rememberShaderInstanceOrNull(FIRE_CARD_SHADER)
+    val (plasmaShader, plasmaProvider) = rememberShaderInstanceOrNull(PLASMA_CARD_SHADER)
+    val (neonShader, neonProvider) = rememberShaderInstanceOrNull(NEON_CARD_SHADER)
+    val (starShader, starProvider) = rememberShaderInstanceOrNull(STARFIELD_CARD_SHADER)
 
     val cards = listOf(
         Triple(fireShader, fireProvider, "Fire"),
@@ -357,7 +357,7 @@ private fun Tab2InnerCard() {
 @Composable
 private fun Tab3Filter() {
     val timeState = rememberShaderTime()
-    val (shader, provider) = rememberAppRuntimeShaderOrNull(FILTER_SHADER)
+    val (shader, provider) = rememberShaderInstanceOrNull(FILTER_SHADER)
     var filterEnabled by remember { mutableStateOf(true) }
 
     val coloredRows = listOf(
@@ -422,7 +422,7 @@ private fun Tab3Filter() {
 @Composable
 private fun Tab4AllUniforms() {
     val timeState = rememberShaderTime()
-    val (shader, provider) = rememberAppRuntimeShaderOrNull(UNIFORMS_SHADER)
+    val (shader, provider) = rememberShaderInstanceOrNull(UNIFORMS_SHADER)
 
     var brightness by remember { mutableFloatStateOf(1f) }
     var offsetX by remember { mutableFloatStateOf(0f) }

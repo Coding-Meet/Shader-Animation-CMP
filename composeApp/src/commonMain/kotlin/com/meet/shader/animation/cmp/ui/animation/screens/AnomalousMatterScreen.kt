@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.meet.shader.animation.cmp.expect_shader.createShader
-import com.meet.shader.animation.cmp.expect_shader.rememberAppRuntimeShaderOrNull
+import com.meet.shader.animation.cmp.expect_shader.rememberShaderInstanceOrNull
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
 
 private const val ANOMALOUS_MATTER_SHADER = """
@@ -162,7 +162,7 @@ half4 main(float2 fragCoord) {
 
 @Composable
 fun AnomalousMatterScreen(onBack: () -> Unit) {
-    val (shader, provider) = rememberAppRuntimeShaderOrNull(ANOMALOUS_MATTER_SHADER)
+    val (shader, provider) = rememberShaderInstanceOrNull(ANOMALOUS_MATTER_SHADER)
     val time by rememberShaderTime()
     var appeared by remember { mutableStateOf(false) }
 
@@ -185,8 +185,10 @@ fun AnomalousMatterScreen(onBack: () -> Unit) {
             .fillMaxSize()
             .drawBehind {
                 if (shader != null && provider != null) {
-                    provider.uniformFloat("resolution", size.width, size.height)
-                    provider.uniformFloat("time", time)
+                    provider.update {
+                        uniformFloat("resolution", size.width, size.height)
+                        uniformFloat("time", time)
+                    }
                     drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
                 }
             }

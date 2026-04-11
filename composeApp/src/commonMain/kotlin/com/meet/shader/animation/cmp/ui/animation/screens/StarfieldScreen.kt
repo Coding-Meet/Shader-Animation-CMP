@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.meet.shader.animation.cmp.expect_shader.createShader
-import com.meet.shader.animation.cmp.expect_shader.rememberAppRuntimeShaderOrNull
+import com.meet.shader.animation.cmp.expect_shader.rememberShaderInstanceOrNull
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
 
 private const val STARFIELD_SHADER = """
@@ -68,7 +68,7 @@ half4 main(float2 fragCoord) {
 
 @Composable
 fun StarfieldScreen(onBack: () -> Unit) {
-    val (shader, provider) = rememberAppRuntimeShaderOrNull(STARFIELD_SHADER)
+    val (shader, provider) = rememberShaderInstanceOrNull(STARFIELD_SHADER)
     val time by rememberShaderTime()
 
     Box(
@@ -76,8 +76,10 @@ fun StarfieldScreen(onBack: () -> Unit) {
             .fillMaxSize()
             .drawBehind {
                 if (shader != null && provider != null) {
-                    provider.uniformFloat("resolution", size.width, size.height)
-                    provider.uniformFloat("time", time)
+                    provider.update {
+                        uniformFloat("resolution", size.width, size.height)
+                        uniformFloat("time", time)
+                    }
                     drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
                 }
             }

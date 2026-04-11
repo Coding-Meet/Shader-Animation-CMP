@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.meet.shader.animation.cmp.expect_shader.createShader
-import com.meet.shader.animation.cmp.expect_shader.rememberAppRuntimeShaderOrNull
+import com.meet.shader.animation.cmp.expect_shader.rememberShaderInstanceOrNull
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
 
 private const val FRACTAL_CLOUDS_SHADER = """
@@ -74,7 +74,7 @@ half4 main(float2 fragCoord) {
 
 @Composable
 fun FractalCloudsScreen(onBack: () -> Unit) {
-    val (shader, provider) = rememberAppRuntimeShaderOrNull(FRACTAL_CLOUDS_SHADER)
+    val (shader, provider) = rememberShaderInstanceOrNull(FRACTAL_CLOUDS_SHADER)
     val time by rememberShaderTime()
 
     Box(
@@ -82,8 +82,10 @@ fun FractalCloudsScreen(onBack: () -> Unit) {
             .fillMaxSize()
             .drawBehind {
                 if (shader != null && provider != null) {
-                    provider.uniformFloat("resolution", size.width, size.height)
-                    provider.uniformFloat("time", time)
+                    provider.update {
+                        uniformFloat("resolution", size.width, size.height)
+                        uniformFloat("time", time)
+                    }
                     drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
                 }
             }

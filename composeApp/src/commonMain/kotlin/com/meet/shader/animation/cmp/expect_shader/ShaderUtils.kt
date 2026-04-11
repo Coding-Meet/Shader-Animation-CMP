@@ -80,7 +80,7 @@ expect fun createShader(
 
 
 @Composable
-fun rememberAppRuntimeShader(
+fun rememberShaderInstance(
     shaderCode: String,
 ): Pair<AppRuntimeShader, ShaderProvider> {
     val appRuntimeShader = remember {
@@ -95,7 +95,7 @@ fun rememberAppRuntimeShader(
 
 
 @Composable
-fun rememberAppRuntimeShaderOrNull(
+fun rememberShaderInstanceOrNull(
     shaderCode: String,
 ): Pair<AppRuntimeShader?, ShaderProvider?> {
 

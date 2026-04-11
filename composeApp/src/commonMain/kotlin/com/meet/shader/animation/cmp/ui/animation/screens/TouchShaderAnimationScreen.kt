@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.meet.shader.animation.cmp.expect_shader.createShader
 import com.meet.shader.animation.cmp.expect_shader.isShaderAvailable
-import com.meet.shader.animation.cmp.expect_shader.rememberAppRuntimeShader
+import com.meet.shader.animation.cmp.expect_shader.rememberShaderInstance
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
 
 const val UNIVERSAL_RIPPLE_SHADER = """
@@ -67,7 +67,7 @@ fun TouchShaderAnimationScreen(onBack: () -> Unit) {
 
     ) {
         if (isShaderAvailable()) {
-            val (shader, provider) = rememberAppRuntimeShader(UNIVERSAL_RIPPLE_SHADER)
+            val (shader, provider) = rememberShaderInstance(UNIVERSAL_RIPPLE_SHADER)
             val time by rememberShaderTime()
             var touch by remember { mutableStateOf(Offset.Zero) }
 
