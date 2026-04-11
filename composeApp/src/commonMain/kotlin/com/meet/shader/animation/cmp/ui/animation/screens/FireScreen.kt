@@ -11,17 +11,20 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.meet.shader.animation.cmp.expect_shader.createShader
+import com.meet.shader.animation.cmp.expect_shader.rememberAppRuntimeShaderOrNull
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
-import com.meet.shader.animation.cmp.expect_shader.shader
 
 private const val FIRE_SHADER = """
+uniform shader inputShader; // 👈 REQUIRED
 uniform float2 resolution;
 uniform float time;
 
@@ -41,6 +44,9 @@ float valueNoise(float2 p) {
 }
 
 half4 main(float2 fragCoord) {
+    // 👇 original UI content
+    half4 base = inputShader.eval(fragCoord);
+
     float2 uv = fragCoord / resolution;
     float2 nUV = uv;
     nUV.y = 1.0 - nUV.y;
@@ -51,6 +57,7 @@ half4 main(float2 fragCoord) {
     float n = 0.0;
     float amp = 0.5;
     float2 q = p;
+
     for (int i = 0; i < 5; i++) {
         n += amp * valueNoise(q);
         q *= 2.0;
@@ -70,19 +77,30 @@ half4 main(float2 fragCoord) {
         col = mix(float3(1.0, 0.5, 0.0), float3(1.0, 1.0, 0.3), (fire - 0.66) / 0.34);
     }
 
-    return half4(half3(col), 1.0);
+    // 👇 fire glow
+    float3 fireColor = col * fire;
+
+    // 👇 blend with UI (IMPORTANT)
+    float3 finalColor = base.rgb + fireColor;
+
+    return half4(finalColor, 1.0);
 }
 """
 
 @Composable
 fun FireScreen(onBack: () -> Unit) {
-    val time by rememberShaderTime()
+    val (shader, provider) = rememberAppRuntimeShaderOrNull(FIRE_SHADER)
+    val timeState = rememberShaderTime()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .shader(FIRE_SHADER) {
-                uniformFloat("time", time)
+            .drawBehind {
+                if (shader != null && provider != null) {
+                    provider.uniformFloat("resolution", size.width, size.height)
+                    provider.uniformFloat("time", timeState.value)
+                    drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
+                }
             }
     ) {
         IconButton(
@@ -106,6 +124,6 @@ fun FireScreen(onBack: () -> Unit) {
 
 @Composable
 @Preview
-private fun FireScreenPreview(){
+private fun FireScreenPreview() {
     FireScreen(onBack = {})
 }

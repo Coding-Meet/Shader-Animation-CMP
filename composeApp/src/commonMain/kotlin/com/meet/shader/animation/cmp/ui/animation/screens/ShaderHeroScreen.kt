@@ -33,16 +33,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.meet.shader.animation.cmp.expect_shader.createShader
+import com.meet.shader.animation.cmp.expect_shader.rememberAppRuntimeShaderOrNull
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
-import com.meet.shader.animation.cmp.expect_shader.shader
 
 private const val SHADER_HERO_SHADER = """
 uniform float2 resolution;
@@ -113,7 +116,8 @@ half4 main(float2 fragCoord) {
 
 @Composable
 fun ShaderHeroScreen(onBack: () -> Unit) {
-    val time by rememberShaderTime()
+    val (shader, provider) = rememberAppRuntimeShaderOrNull(SHADER_HERO_SHADER)
+    val timeState = rememberShaderTime()
     var appeared by remember { mutableStateOf(false) }
 
     val alpha by animateFloatAsState(
@@ -133,15 +137,23 @@ fun ShaderHeroScreen(onBack: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .shader(SHADER_HERO_SHADER) {
-                uniformFloat("time", time)
+            .drawBehind {
+                if (shader != null && provider != null) {
+                    provider.uniformFloat("resolution", size.width, size.height)
+                    provider.uniformFloat("time", timeState.value)
+                    drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
+                }
             }
     ) {
         IconButton(
             onClick = onBack,
             modifier = Modifier.align(Alignment.TopStart).systemBarsPadding().padding(8.dp)
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Back",
+                tint = Color.White
+            )
         }
 
         Column(
@@ -267,7 +279,10 @@ fun ShaderHeroScreen(onBack: () -> Unit) {
                         containerColor = Color(0xFFFFA500).copy(alpha = 0.1f),
                         contentColor = Color(0xFFFFA500).copy(alpha = 0.9f)
                     ),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFFFA500).copy(alpha = 0.3f))
+                    border = androidx.compose.foundation.BorderStroke(
+                        1.dp,
+                        Color(0xFFFFA500).copy(alpha = 0.3f)
+                    )
                 ) {
                     Text(
                         "Explore Features",
@@ -275,7 +290,7 @@ fun ShaderHeroScreen(onBack: () -> Unit) {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(20.dp))
         }
     }
@@ -283,6 +298,6 @@ fun ShaderHeroScreen(onBack: () -> Unit) {
 
 @Composable
 @Preview
-private fun ShaderHeroScreenPreview(){
+private fun ShaderHeroScreenPreview() {
     ShaderHeroScreen(onBack = {})
 }

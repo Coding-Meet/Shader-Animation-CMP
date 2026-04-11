@@ -19,67 +19,95 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.meet.shader.animation.cmp.expect_shader.createShader
+import com.meet.shader.animation.cmp.expect_shader.isShaderAvailable
+import com.meet.shader.animation.cmp.expect_shader.rememberAppRuntimeShader
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
-import com.meet.shader.animation.cmp.expect_shader.shader
 
-private const val TOUCH_SHADER = """
-    uniform float2 resolution;
-    uniform float time;
-    uniform float2 touch;
+const val UNIVERSAL_RIPPLE_SHADER = """
+uniform float2 resolution;
+uniform float time;
+uniform float2 touch;
+uniform float4 color;
 
-    half4 main(in float2 fragCoord) {
-        float2 uv = fragCoord / resolution.xy;
-        float2 touchUV = touch / resolution.xy;
+half4 main(in float2 fragCoord) {
+    float2 uv = fragCoord / resolution.xy;
+    float2 touchUV = touch / resolution.xy;
 
-        float dist = distance(uv, touchUV);
+    float dist = distance(uv, touchUV);
 
-        // Ripple waves that emanate outward from the touch point
-        float ripple = sin(dist * 30.0 - time * 6.0) * 0.5 + 0.5;
-        float fade = 1.0 - smoothstep(0.0, 0.5, dist);
+    float ripple = sin(dist * 40.0 - time * 4.0);
+    ripple *= exp(-dist * 4.0);
 
-        // Color oscillates between blue and pink over time
-        half3 col1 = half3(0.2, 0.5, 1.0);
-        half3 col2 = half3(1.0, 0.3, 0.5);
-        half3 col = mix(col1, col2, sin(time) * 0.5 + 0.5);
+    float ring = smoothstep(0.03, 0.0, abs(dist - 0.2));
 
-        return half4(col * ripple * fade, 1.0);
-    }
+    float3 base = float3(0.05, 0.08, 0.12);
+    float3 glow = color.rgb * ripple;
+
+    float3 finalColor = base + glow + ring;
+
+    return half4(finalColor, 1.0);
+}
 """
 
 @Composable
 fun TouchShaderAnimationScreen(onBack: () -> Unit) {
-    val time by rememberShaderTime()
-
-    var touch by remember { mutableStateOf(Offset.Zero) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(Unit) {
-                detectTapGestures(onPress = { touch = it })
-            }
-            .pointerInput(Unit) {
-                detectDragGestures(
-                    onDragStart = { touch = it },
-                    onDrag = { change, _ -> touch = change.position }
-                )
-            }
-            .shader(TOUCH_SHADER) {
-                uniformFloat("time", time)
-                uniformFloat("touch", touch.x, touch.y)
-            }
+
     ) {
+        if (isShaderAvailable()) {
+            val (shader, provider) = rememberAppRuntimeShader(UNIVERSAL_RIPPLE_SHADER)
+            val time by rememberShaderTime()
+            var touch by remember { mutableStateOf(Offset.Zero) }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTapGestures(onPress = { touch = it })
+                    }
+                    .pointerInput(Unit) {
+                        detectDragGestures(
+                            onDragStart = { touch = it },
+                            onDrag = { change, _ -> touch = change.position }
+                        )
+                    }
+                    .drawBehind {
+                        provider.uniformFloat("resolution", size.width, size.height)
+                        provider.uniformFloat("time", time)
+                        provider.uniformFloat("touch", touch.x, touch.y)
+                        provider.uniformColor("color", Color(0xFF4FC3F7))
+
+                        drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
+                    }
+            )
+        } else {
+            Text(
+                text = "Requires Android 13+",
+                color = Color.White,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
         IconButton(
             onClick = onBack,
             modifier = Modifier.align(Alignment.TopStart).systemBarsPadding().padding(8.dp)
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Back",
+                tint = Color.White
+            )
         }
         Text(
             text = "Touch Shader Animation",
@@ -92,6 +120,6 @@ fun TouchShaderAnimationScreen(onBack: () -> Unit) {
 
 @Composable
 @Preview
-private fun TouchShaderAnimationScreenPreview(){
+private fun TouchShaderAnimationScreenPreview() {
     TouchShaderAnimationScreen(onBack = {})
 }
