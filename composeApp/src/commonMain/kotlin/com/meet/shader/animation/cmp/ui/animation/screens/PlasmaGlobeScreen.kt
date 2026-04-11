@@ -14,12 +14,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.meet.shader.animation.cmp.expect_shader.createShader
+import com.meet.shader.animation.cmp.expect_shader.rememberShaderInstanceOrNull
 import com.meet.shader.animation.cmp.expect_shader.rememberShaderTime
-import com.meet.shader.animation.cmp.expect_shader.shader
 
 private const val PLASMA_GLOBE_SHADER = """
 uniform float2 resolution;
@@ -94,20 +97,31 @@ half4 main(float2 fragCoord) {
 
 @Composable
 fun PlasmaGlobeScreen(onBack: () -> Unit) {
+    val (shader, provider) = rememberShaderInstanceOrNull(PLASMA_GLOBE_SHADER)
     val time by rememberShaderTime()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .shader(PLASMA_GLOBE_SHADER) {
-                uniformFloat("time", time)
+            .drawBehind {
+                if (shader != null && provider != null) {
+                    provider.update {
+                        uniformFloat("resolution", size.width, size.height)
+                        uniformFloat("time", time)
+                    }
+                    drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
+                }
             }
     ) {
         IconButton(
             onClick = onBack,
             modifier = Modifier.align(Alignment.TopStart).systemBarsPadding().padding(8.dp)
         ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Back",
+                tint = Color.White
+            )
         }
         Text(
             text = "Plasma Globe",
@@ -120,6 +134,6 @@ fun PlasmaGlobeScreen(onBack: () -> Unit) {
 
 @Composable
 @Preview
-private fun PlasmaGlobeScreenPreview(){
+private fun PlasmaGlobeScreenPreview() {
     PlasmaGlobeScreen(onBack = {})
 }
