@@ -1,5 +1,7 @@
 package com.meet.shader.animation.cmp.expect_shader
 
+import androidx.compose.ui.graphics.Color
+
 interface ShaderProvider {
     fun uniformInt(name: String, value: Int)
     fun uniformInt(name: String, value1: Int, value2: Int)
@@ -13,4 +15,5 @@ interface ShaderProvider {
     fun uniformFloat(name: String, values: List<Float>)
 
     fun uniformColor(name: String, r: Float, g: Float, b: Float, a: Float)
+    fun uniformColor(name: String,color: Color)
 }
