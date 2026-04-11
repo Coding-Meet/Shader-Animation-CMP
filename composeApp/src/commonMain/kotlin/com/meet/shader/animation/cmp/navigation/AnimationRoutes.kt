@@ -77,7 +77,11 @@ data object NeonOrbit : AnimationRoute
 @Serializable
 data object PlasmaGlobe : AnimationRoute
 
+@Serializable
+data object ShaderApiShowcase : AnimationRoute
+
 enum class AnimationEntry(val title: String, val route: AnimationRoute) {
+    SHADER_API_SHOWCASE("Shader API Showcase", ShaderApiShowcase),
     SHADER_ANIMATION("Touch Shader Animation", TouchShaderAnimation),
     PLASMA_WAVES("Plasma Waves", PlasmaWaves),
     STARFIELD("Starfield", Starfield),

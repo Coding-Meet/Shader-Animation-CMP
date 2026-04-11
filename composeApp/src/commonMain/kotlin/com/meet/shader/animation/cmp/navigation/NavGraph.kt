@@ -21,10 +21,11 @@ import com.meet.shader.animation.cmp.ui.animation.screens.NeonPulseScreen
 import com.meet.shader.animation.cmp.ui.animation.screens.OceanWavesScreen
 import com.meet.shader.animation.cmp.ui.animation.screens.PlasmaGlobeScreen
 import com.meet.shader.animation.cmp.ui.animation.screens.PlasmaWavesScreen
-import com.meet.shader.animation.cmp.ui.animation.screens.TouchShaderAnimationScreen
+import com.meet.shader.animation.cmp.ui.animation.screens.ShaderApiShowcaseScreen
 import com.meet.shader.animation.cmp.ui.animation.screens.ShaderHeroScreen
 import com.meet.shader.animation.cmp.ui.animation.screens.StarfieldScreen
 import com.meet.shader.animation.cmp.ui.animation.screens.SupernovaScreen
+import com.meet.shader.animation.cmp.ui.animation.screens.TouchShaderAnimationScreen
 import com.meet.shader.animation.cmp.ui.animation.screens.TunnelScreen
 import com.meet.shader.animation.cmp.ui.animation.screens.WarpSpeedScreen
 import com.meet.shader.animation.cmp.ui.animation.screens.WaterRipplesScreen
@@ -35,6 +36,9 @@ fun AnimationNavGraph() {
     NavHost(navController = navController, startDestination = AnimationList) {
         composable<AnimationList> {
             AnimationScreen(onNavigate = { navController.navigate(it) })
+        }
+        composable<ShaderApiShowcase> {
+            ShaderApiShowcaseScreen(onBack = { navController.navigateUp() })
         }
         composable<TouchShaderAnimation> {
             TouchShaderAnimationScreen(onBack = { navController.navigateUp() })
