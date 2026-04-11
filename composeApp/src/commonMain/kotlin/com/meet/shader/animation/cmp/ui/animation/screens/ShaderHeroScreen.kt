@@ -117,7 +117,7 @@ half4 main(float2 fragCoord) {
 @Composable
 fun ShaderHeroScreen(onBack: () -> Unit) {
     val (shader, provider) = rememberAppRuntimeShaderOrNull(SHADER_HERO_SHADER)
-    val timeState = rememberShaderTime()
+    val time by rememberShaderTime()
     var appeared by remember { mutableStateOf(false) }
 
     val alpha by animateFloatAsState(
@@ -140,7 +140,7 @@ fun ShaderHeroScreen(onBack: () -> Unit) {
             .drawBehind {
                 if (shader != null && provider != null) {
                     provider.uniformFloat("resolution", size.width, size.height)
-                    provider.uniformFloat("time", timeState.value)
+                    provider.uniformFloat("time", time)
                     drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
                 }
             }

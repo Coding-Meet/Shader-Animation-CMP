@@ -11,6 +11,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -88,7 +89,7 @@ half4 main(float2 fragCoord) {
 @Composable
 fun SupernovaScreen(onBack: () -> Unit) {
     val (shader, provider) = rememberAppRuntimeShaderOrNull(SUPERNOVA_SHADER)
-    val timeState = rememberShaderTime()
+    val time by rememberShaderTime()
 
     Box(
         modifier = Modifier
@@ -96,7 +97,7 @@ fun SupernovaScreen(onBack: () -> Unit) {
             .drawBehind {
                 if (shader != null && provider != null) {
                     provider.uniformFloat("resolution", size.width, size.height)
-                    provider.uniformFloat("time", timeState.value)
+                    provider.uniformFloat("time", time)
                     drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
                 }
             }

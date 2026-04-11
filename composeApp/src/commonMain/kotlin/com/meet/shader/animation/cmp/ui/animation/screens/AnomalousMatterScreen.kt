@@ -163,7 +163,7 @@ half4 main(float2 fragCoord) {
 @Composable
 fun AnomalousMatterScreen(onBack: () -> Unit) {
     val (shader, provider) = rememberAppRuntimeShaderOrNull(ANOMALOUS_MATTER_SHADER)
-    val timeState = rememberShaderTime()
+    val time by rememberShaderTime()
     var appeared by remember { mutableStateOf(false) }
 
     val alpha by animateFloatAsState(
@@ -186,7 +186,7 @@ fun AnomalousMatterScreen(onBack: () -> Unit) {
             .drawBehind {
                 if (shader != null && provider != null) {
                     provider.uniformFloat("resolution", size.width, size.height)
-                    provider.uniformFloat("time", timeState.value)
+                    provider.uniformFloat("time", time)
                     drawRect(ShaderBrush(createShader(appRuntimeShader = shader)))
                 }
             }
