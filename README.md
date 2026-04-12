@@ -5,7 +5,7 @@
 How to Implement Shaders in Compose Multiplatform (Android, iOS, Desktop & Web)
 
 Medium Article:
-https://medium.com/@meet26/how-to-implement-shaders-in-compose-multiplatform-kmp-e1a8921ca792
+https://medium.com/@meet26/how-to-implement-shaders-in-compose-multiplatform-android-ios-desktop-web-c86a36dd9666
 
 Web Demo:
 https://coding-meet.github.io/Shader-Animation-CMP/
