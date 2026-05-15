@@ -2,7 +2,7 @@
 # Build Tools
 agp = "8.13.2"
 kotlin = "2.3.20"
-composeMultiplatform = "1.10.3"
+composeMultiplatform = "1.11.0"
 
 android-compileSdk = "36"
 android-minSdk = "24"
